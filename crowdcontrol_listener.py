@@ -56,6 +56,8 @@ ITEMS: Dict[str, int] = {
     "stone": 0x2F
 }
 
+ITEMS_REVERSE: Dict[int, str] = {v: k for k, v in ITEMS.items()}
+
 MARKER = b"\x12\x34\x56\x78" + b"\x00\x00\x00"
 
 UDP_IP = "192.168.0.205"

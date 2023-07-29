@@ -12,7 +12,7 @@ import websockets
 import os
 import concurrent.futures
 
-from crowdcontrol_listener import ITEMS, ccSocket, getItemInt, trySpawnItemInt
+from crowdcontrol_listener import ITEMS, ccSocket, getItemInt, trySpawnItemInt, ITEMS_REVERSE
 
 WSS_ENDPOINT_SUBDOMAIN = "r8073rtqd8"
 WEBSOCKET_URL = f"wss://{WSS_ENDPOINT_SUBDOMAIN}.execute-api.us-east-1.amazonaws.com/staging"
@@ -35,9 +35,11 @@ def send_and_read(item: int) -> bool:
         trySpawnItemInt(item)
     time.sleep(0.017 * 4)
     success = False
+    items = bytes()
     try:
         while True:
             datagram = os.read(ccSocket, 1)
+            items += datagram
             if datagram == b"\xFF":
                 SPAWNS_OFF = True
             elif datagram == b"\xFE":
@@ -46,6 +48,7 @@ def send_and_read(item: int) -> bool:
                 success = True
     except BlockingIOError:
         pass
+    print(f"Items: " + ", ".join(f"{i:02x} {ITEMS_REVERSE.get(i)}".upper() for i in items))
     return success
 
 
