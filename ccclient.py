@@ -14,11 +14,9 @@ import concurrent.futures
 
 from crowdcontrol_listener import ITEMS, ccSocket, getItemInt, trySpawnItemInt
 
-WSS_ENDPOINT_SUBDOMAIN = "r8073rtqd8"
-WEBSOCKET_URL = f"wss://{WSS_ENDPOINT_SUBDOMAIN}.execute-api.us-east-1.amazonaws.com/staging"
+WEBSOCKET_URL = f"wss://pubsub.crowdcontrol.live"
 
-HTTP_ENDPOINT_SUBDOMAIN = "9n5yuz1umd"
-HTTP_ROOT_URL = f"{HTTP_ENDPOINT_SUBDOMAIN}.execute-api.us-east-1.amazonaws.com"
+HTTP_ROOT_URL = f"trpc.crowdcontrol.live"
 START_SESSION_ENDPOINT = f"https://{HTTP_ROOT_URL}/gameSession.startSession"
 END_SESSION_ENDPOINT = f"https://{HTTP_ROOT_URL}/gameSession.stopSession"
 
@@ -153,7 +151,7 @@ class CrowdControl:
                     whoami: dict = json.loads(whoami_raw)
                     if whoami.get('type') == 'whoami':
                         connection_id = whoami['payload']['connectionID']
-                        auth_url = f"https://beta-auth.crowdcontrol.live/?connectionID={connection_id}"
+                        auth_url = f"https://auth.crowdcontrol.live/?connectionID={connection_id}"
                         print(f"Please visit {auth_url} to sign in and authorize this app")
                     elif whoami.get('type') == 'login-success':
                         self.auth_token = whoami['payload']['token']
@@ -177,7 +175,7 @@ class CrowdControl:
             if not self.session_id:
                 print(f"Error starting session: no session ID returned ({s_data})")
                 return
-            ext_url = f"https://beta-extension.crowdcontrol.live/#/{self.user['profileType']}/{self.user['originID']}"
+            ext_url = f"https://interact.crowdcontrol.live/#/{self.user['profileType']}/{self.user['originID']}"
             print(f"Session started; effects can now be purchased at {ext_url}")
             # Begin listening for packets
             print("Listening for packets...")
